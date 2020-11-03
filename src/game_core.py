@@ -1,5 +1,6 @@
 import pygame as pg
 
+from src.camera import Camera
 from src.game_objects.tile import Tile
 from src.main_loop import MainLoop
 from src.map import Map
@@ -11,9 +12,18 @@ class GameCore(MainLoop):
     def __init__(self):
         super().__init__(CAPTION, SCREEN_SIZE, FPS)
 
+        self.create_objects()
+        self.mouse_handlers.append(self.handle_mouse_event)
+
+    def create_objects(self):
         self._draw_grid()
         self._create_test_map()
-        self.mouse_handlers.append(self.handle_mouse_event)
+        self._create_camera()
+
+    def _create_camera(self):
+        self.camera = Camera(self.map.width, self.map.height)
+        for key in CAMERA_SHORTCUTS.values():
+            self.add_up_down_key_handlers(self.camera, key)
 
     def _draw_grid(self):
         width, height = self.main_surface.get_size()
@@ -43,6 +53,15 @@ class GameCore(MainLoop):
         for sprite in self.visible_sprites:
             if sprite.check_click(mouse_pos) is True:
                 print(sprite.rect.topleft)
+
+    def draw(self):
+        for sprite in self.visible_sprites:
+            self.main_surface.blit(sprite.image, self.camera.apply(sprite))
+
+    def update(self):
+        self.main_surface.fill(BGCOLOR)
+        super().update()
+        self.camera.update()
 
 
 if __name__ == '__main__':
