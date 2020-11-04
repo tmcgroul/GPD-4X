@@ -39,9 +39,13 @@ class GameCore(MainLoop):
         for row, tiles in enumerate(self.map.get_data):
             for column, tile in enumerate(tiles):
                 if tile == "1":
-                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("grass").convert()))
+                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("grass").convert()), layer=0)
                 if tile == "0":
-                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("water").convert()))
+                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("water").convert()), layer=0)
+                if tile == "9":
+                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("grass").convert()), layer=0)
+                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("village").convert_alpha()), layer=1)
+
 
     def handle_mouse_event(self, type_, pos):
         if type_ == pg.MOUSEMOTION:
