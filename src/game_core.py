@@ -2,6 +2,7 @@ import pygame as pg
 
 from src.camera import Camera
 from src.game_objects.tile import Tile
+from src.graphics import SpriteSheet
 from src.main_loop import MainLoop
 from src.map import Map
 from src.constants import *
@@ -12,6 +13,7 @@ class GameCore(MainLoop):
     def __init__(self):
         super().__init__(CAPTION, SCREEN_SIZE, FPS)
 
+        self.image_manager = SpriteSheet()
         self.create_objects()
         self.mouse_handlers.append(self.handle_mouse_event)
 
@@ -37,9 +39,9 @@ class GameCore(MainLoop):
         for row, tiles in enumerate(self.map.get_data):
             for column, tile in enumerate(tiles):
                 if tile == "1":
-                    self.visible_sprites.add(Tile((column, row), TILE_SIZE, "green"))
+                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("grass").convert()))
                 if tile == "0":
-                    self.visible_sprites.add(Tile((column, row), TILE_SIZE, "blue"))
+                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("water").convert()))
 
     def handle_mouse_event(self, type_, pos):
         if type_ == pg.MOUSEMOTION:

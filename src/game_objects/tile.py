@@ -5,13 +5,12 @@ from src.constants import *
 
 
 class Tile(ClickableSprite):
-    def __init__(self, coordinate, size, color):
+    def __init__(self, coordinate, image):
         super().__init__()
         self.coordinate = coordinate
         self.pos = self.get_position()
 
-        self.image = pg.Surface(size)
-        self.image.fill(color)
+        self.image = image
         self.rect = self.image.get_rect(topleft=self.pos)
 
     def get_position(self):
