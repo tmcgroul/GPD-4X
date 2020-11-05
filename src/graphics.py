@@ -11,8 +11,8 @@ class SpriteSheet:
         self.source_image.set_colorkey("white")
         self.width, self.height = self.source_image.get_size()
 
-        self.sprites = {row: [(col * TILE_WIDTH, row * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT) for col in
-                              range(self.width // TILE_WIDTH)] for row in range(self.height // TILE_HEIGHT)}
+        self.sprites = {row: [(col * SH_TILE_SIZE, row * SH_TILE_SIZE, SH_TILE_SIZE, SH_TILE_SIZE) for col in
+                              range(self.width // SH_TILE_SIZE)] for row in range(self.height // SH_TILE_SIZE)}
 
     def get_image(self, name):
         x, y, width, height = self._name_to_coordinate(name)
@@ -22,9 +22,9 @@ class SpriteSheet:
         return sprite
 
     def _name_to_coordinate(self, name):
-        x = y = width = height = None
+        image_data = None
 
-        # TODO: Add json file with: name: coordinates
+        # TODO: Add json file with: name: data
         images = {
             "grass": [(0, i) for i in range(4)],
             "water": [(24, i) for i in range(4)],
@@ -34,10 +34,10 @@ class SpriteSheet:
         for image_name, coordinates in images.items():
             if name == image_name:
                 row, column = choice(coordinates)
-                x, y, width, height = self.sprites[row][column]
+                image_data = self.sprites[row][column]
 
-        if None in (x, y, width, height):
+        if image_data is None:
             # if sprite didn't found
-            x, y, width, height = self.sprites[45][4]
+            image_data = self.sprites[45][4]
 
-        return x, y, width, height
+        return image_data

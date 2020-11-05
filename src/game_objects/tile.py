@@ -14,4 +14,4 @@ class Tile(ClickableSprite):
         self.rect = self.image.get_rect(topleft=self.pos)
 
     def get_position(self):
-        return self.coordinate[0] * TILE_WIDTH, self.coordinate[1] * TILE_HEIGHT
+        return self.coordinate[0] * TILE_SIZE, self.coordinate[1] * TILE_SIZE

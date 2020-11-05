@@ -28,9 +28,9 @@ class GameCore(MainLoop):
 
     def _draw_grid(self):
         width, height = self.main_surface.get_size()
-        for x in range(0, width, TILE_WIDTH):
+        for x in range(0, width, TILE_SIZE):
             pg.draw.line(self.main_surface, "darkgrey", (x, 0), (x, height))
-        for y in range(0, height, TILE_HEIGHT):
+        for y in range(0, height, TILE_SIZE):
             pg.draw.line(self.main_surface, "darkgrey", (0, y), (width, y))
 
     def _create_test_map(self):
