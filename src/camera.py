@@ -2,11 +2,13 @@ from src.constants import *
 
 
 class Camera:
-    def __init__(self, width, height):
+    def __init__(self, width, height, activate_borders):
         self.x = self.y = 0
         self.xv = self.yv = 0
         self.width = width
         self.height = height
+        self.activate_borders = activate_borders
+
         self.camera = pg.Rect(self.x, self.y, self.width, self.height)
 
     def apply(self, entity):
@@ -34,7 +36,18 @@ class Camera:
         if key == CAMERA_SHORTCUTS["Move right"]:
             self.xv = 0
 
+    def _scrolling_limit(self):
+        """Limit scrolling to map size"""
+        self.x = min(0, self.x)  # left
+        self.y = min(0, self.y)  # top
+        self.x = max(-(self.width - SCREEN_WIDTH), self.x)  # right
+        self.y = max(-(self.height - SCREEN_HEIGHT), self.y)  # bottom
+
     def update(self):
         self.x += self.xv
         self.y += self.yv
+
+        if self.activate_borders is True:
+            self._scrolling_limit()
+
         self.camera = pg.Rect(self.x, self.y, self.width, self.height)

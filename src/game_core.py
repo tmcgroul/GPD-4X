@@ -23,7 +23,7 @@ class GameCore(MainLoop):
         self._create_camera()
 
     def _create_camera(self):
-        self.camera = Camera(self.map.width, self.map.height)
+        self.camera = Camera(self.map.width, self.map.height, ACTIVATE_SCROLLING_BORDERS)
         for key in CAMERA_SHORTCUTS.values():
             self.add_up_down_key_handlers(self.camera, key)
 
@@ -39,13 +39,12 @@ class GameCore(MainLoop):
         for row, tiles in enumerate(self.map.get_data):
             for column, tile in enumerate(tiles):
                 if tile == "1":
-                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("grass").convert()), layer=0)
+                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("grass")), layer=0)
                 if tile == "0":
-                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("water").convert()), layer=0)
+                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("water")), layer=0)
                 if tile == "9":
-                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("grass").convert()), layer=0)
-                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("village").convert_alpha()), layer=1)
-
+                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("grass")), layer=0)
+                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("village")), layer=1)
 
     def handle_mouse_event(self, type_, pos):
         if type_ == pg.MOUSEMOTION:
@@ -65,7 +64,7 @@ class GameCore(MainLoop):
             self.main_surface.blit(sprite.image, self.camera.apply(sprite))
 
     def update(self):
-        self.main_surface.fill(BGCOLOR)
+        self.main_surface.fill(BG_COLOR)
         super().update()
         self.camera.update()
 
