@@ -8,6 +8,7 @@ BG_COLOR = "black"
 
 # Tile
 TILE_SIZE = TILE_WIDTH, TILE_HEIGHT = 16, 16
+ACTIVATE_TEST_GRID = False
 
 # Camera
 CAMERA_SPEED = 200

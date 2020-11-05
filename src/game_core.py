@@ -18,7 +18,6 @@ class GameCore(MainLoop):
         self.mouse_handlers.append(self.handle_mouse_event)
 
     def create_objects(self):
-        self._draw_grid()
         self._create_test_map()
         self._create_camera()
 
@@ -30,9 +29,9 @@ class GameCore(MainLoop):
     def _draw_grid(self):
         width, height = self.main_surface.get_size()
         for x in range(0, width, TILE_WIDTH):
-            pg.draw.line(self.main_surface, "lightgrey", (x, 0), (x, height))
+            pg.draw.line(self.main_surface, "darkgrey", (x, 0), (x, height))
         for y in range(0, height, TILE_HEIGHT):
-            pg.draw.line(self.main_surface, "lightgrey", (0, y), (width, y))
+            pg.draw.line(self.main_surface, "darkgrey", (0, y), (width, y))
 
     def _create_test_map(self):
         self.map = Map(TEST_MAP)
@@ -62,6 +61,9 @@ class GameCore(MainLoop):
     def draw(self):
         for sprite in self.visible_sprites:
             self.main_surface.blit(sprite.image, self.camera.apply(sprite))
+
+        if ACTIVATE_TEST_GRID is True:
+            self._draw_grid()
 
     def update(self):
         self.main_surface.fill(BG_COLOR)
