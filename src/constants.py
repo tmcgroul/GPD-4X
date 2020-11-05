@@ -19,4 +19,7 @@ CAMERA_SHORTCUTS = {
     "Move down": pg.K_s,
     "Move left": pg.K_a,
     "Move right": pg.K_d,
+    "Activate/deactivate borders": pg.K_c,
 }
+
+# SHOW_GRID = pg.K_g

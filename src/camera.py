@@ -25,6 +25,9 @@ class Camera:
         if key == CAMERA_SHORTCUTS["Move right"]:
             self.xv = -CAMERA_SPEED
 
+        if key == CAMERA_SHORTCUTS["Activate/deactivate borders"]:
+            self.activate_borders = not self.activate_borders
+
     def handle_key_up(self, key):
         if key == CAMERA_SHORTCUTS["Move up"]:
             self.yv = 0
