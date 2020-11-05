@@ -19,7 +19,14 @@ class SpriteSheet:
         source_area = pg.Rect(x, y, width, height)
         sprite = pg.Surface((width, height), pg.SRCALPHA)
         sprite.blit(self.source_image, (0, 0), source_area)
+
+        if SH_TILE_SIZE != TILE_SIZE:
+            sprite = self._scale(sprite)
+
         return sprite
+
+    def _scale(self, sprite):
+        return pg.transform.scale(sprite, (TILE_SIZE, TILE_SIZE))
 
     def _name_to_coordinate(self, name):
         image_data = None
