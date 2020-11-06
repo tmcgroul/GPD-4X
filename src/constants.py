@@ -1,4 +1,5 @@
 import pygame as pg
+# TODO: remove this import
 
 # general
 CAPTION = "GPD-4X"

@@ -1,11 +1,11 @@
+from pygame.math import Vector2
 from src.constants import *
-vec = pg.math.Vector2
 
 
 class Camera:
     def __init__(self, width, height, activate_borders):
-        self.velocity = vec(0, 0)
-        self.pos = vec(0, 0)
+        self.velocity = Vector2(0, 0)
+        self.pos = Vector2(0, 0)
         self.width = width
         self.height = height
         self.activate_borders = activate_borders

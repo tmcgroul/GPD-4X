@@ -1,7 +1,7 @@
-import pygame as pg
+from pygame.math import Vector2
 
 from src.camera import Camera
-from src.game_objects.tile import Tile
+from src.game_objects.abstract.tile import Tile
 from src.graphics import SpriteSheet
 from src.main_loop import MainLoop
 from src.map import Map
@@ -38,12 +38,12 @@ class GameCore(MainLoop):
         for row, tiles in enumerate(self.map.get_data):
             for column, tile in enumerate(tiles):
                 if tile == "1":
-                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("grass")), layer=0)
+                    self.visible_sprites.add(Tile(Vector2(column, row), self.image_manager.get_image("grass")), layer=0)
                 if tile == "0":
-                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("water")), layer=0)
+                    self.visible_sprites.add(Tile(Vector2(column, row), self.image_manager.get_image("water")), layer=0)
                 if tile == "9":
-                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("grass")), layer=0)
-                    self.visible_sprites.add(Tile((column, row), self.image_manager.get_image("village")), layer=1)
+                    self.visible_sprites.add(Tile(Vector2(column, row), self.image_manager.get_image("grass")), layer=0)
+                    self.visible_sprites.add(Tile(Vector2(column, row), self.image_manager.get_image("village")), layer=1)
 
     def handle_mouse_event(self, type_, pos):
         if type_ == pg.MOUSEMOTION:
