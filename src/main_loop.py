@@ -59,7 +59,7 @@ class MainLoop:
                     handler(event.key)
             elif event.type in (pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP, pg.MOUSEMOTION):
                 for handler in self.mouse_handlers:
-                    handler(event.type, event.pos)
+                    handler(event.type, pg.Vector2(event.pos))
 
     def add_up_down_key_handlers(self, obj, key):
         self.keydown_handlers[key].append(obj.handle_key_down)

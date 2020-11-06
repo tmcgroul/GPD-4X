@@ -13,7 +13,10 @@ class Camera:
         self.camera = pg.Rect(self.pos.x, self.pos.y, self.width, self.height)
 
     def apply(self, entity):
-        return entity.rect.move(self.camera.topleft)
+        if isinstance(entity, Vector2):
+            return entity - self.pos
+        else:
+            return entity.rect.move(self.camera.topleft)
 
     def handle_key_down(self, key):
         if key == CAMERA_SHORTCUTS["Move up"]:

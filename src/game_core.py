@@ -14,6 +14,8 @@ class GameCore(MainLoop):
         super().__init__(CAPTION, SCREEN_SIZE, FPS)
 
         self.image_manager = SpriteSheet()
+        self.selected_tile = pg.sprite.GroupSingle()
+
         self.create_objects()
         self.mouse_handlers.append(self.handle_mouse_event)
 
@@ -42,10 +44,13 @@ class GameCore(MainLoop):
                 if tile == "0":
                     self.visible_sprites.add(Tile(Vector2(column, row), self.image_manager.get_image("water")), layer=0)
                 if tile == "9":
+                    # TODO: Remove double sprite on one coordinate
                     self.visible_sprites.add(Tile(Vector2(column, row), self.image_manager.get_image("grass")), layer=0)
                     self.visible_sprites.add(Tile(Vector2(column, row), self.image_manager.get_image("village")), layer=1)
 
     def handle_mouse_event(self, type_, pos):
+        pos = self.camera.apply(pos)
+
         if type_ == pg.MOUSEMOTION:
             pass
         elif type_ == pg.MOUSEBUTTONDOWN:
@@ -54,9 +59,24 @@ class GameCore(MainLoop):
             pass
 
     def handle_mouse_down(self, mouse_pos):
+        clicked_sprite = None
         for sprite in self.visible_sprites:
             if sprite.check_click(mouse_pos) is True:
-                print(sprite.rect.topleft)
+                clicked_sprite = sprite
+                break
+
+        if clicked_sprite is not None:
+            if isinstance(clicked_sprite, Tile):
+
+                # if selected_tile group is empty
+                if self.selected_tile.sprite is None:
+                    clicked_sprite.switch_selection()
+                    self.selected_tile.add(clicked_sprite)
+
+                # unselect
+                elif self.selected_tile.sprite is clicked_sprite:
+                    clicked_sprite.switch_selection()
+                    self.selected_tile.empty()
 
     def draw(self):
         for sprite in self.visible_sprites:
@@ -69,6 +89,9 @@ class GameCore(MainLoop):
         self.main_surface.fill(BG_COLOR)
         super().update()
         self.camera.update()
+
+        for sprite in self.visible_sprites:
+            if sprite.selected is True: pass
 
 
 if __name__ == '__main__':
