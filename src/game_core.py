@@ -65,37 +65,38 @@ class GameCore(MainLoop):
                     self.player1_villages.add(t)
                     self.visible_sprites.add(t, layer=1)
 
-    def handle_mouse_event(self, type_, pos):
+    def handle_mouse_event(self, type_, pos, button=0):
         pos = self.camera.apply(pos)
 
         if type_ == pg.MOUSEMOTION:
             pass
         elif type_ == pg.MOUSEBUTTONDOWN:
-            self.handle_mouse_down(pos)
+            self.handle_mouse_down(pos, button)
         elif type_ == pg.MOUSEBUTTONUP:
             pass
 
-    def handle_mouse_down(self, mouse_pos):
-        clicked_sprite = None
+    def handle_mouse_down(self, mouse_pos, mouse_button):
+        if mouse_button == 1:
+            clicked_sprite = None
 
-        for group in self.search_order:
-            for sprite in group:
-                if sprite.check_click(mouse_pos) is True:
-                    clicked_sprite = sprite
-                    break
+            for group in self.search_order:
+                for sprite in group:
+                    if sprite.check_click(mouse_pos) is True:
+                        clicked_sprite = sprite
+                        break
 
-        if clicked_sprite is not None:
-            if isinstance(clicked_sprite, Tile):
+            if clicked_sprite is not None:
+                if isinstance(clicked_sprite, Tile):
 
-                # select
-                if self.selection_box.sprite is None:
-                    sb = SelectionBox(clicked_sprite)
-                    self.selection_box.add(sb)
-                    self.visible_sprites.add(sb)
+                    # select
+                    if self.selection_box.sprite is None:
+                        sb = SelectionBox(clicked_sprite)
+                        self.selection_box.add(sb)
+                        self.visible_sprites.add(sb)
 
-                # unselect
-                elif self.selection_box.sprite.target is clicked_sprite:
-                    self.selection_box.sprite.kill()
+                    # unselect
+                    elif self.selection_box.sprite.target is clicked_sprite:
+                        self.selection_box.sprite.kill()
 
     def draw(self):
         for sprite in self.visible_sprites:
