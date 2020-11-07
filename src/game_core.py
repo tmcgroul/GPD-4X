@@ -16,6 +16,13 @@ class GameCore(MainLoop):
         self.image_manager = SpriteSheet()
         self.selected_tile = pg.sprite.GroupSingle()
 
+        self.nature_tiles = pg.sprite.Group()
+        self.player1_villages = pg.sprite.Group()
+        self.search_order = [
+            self.player1_villages,
+            self.nature_tiles,
+        ]
+
         self.create_objects()
         self.mouse_handlers.append(self.handle_mouse_event)
 
@@ -40,13 +47,22 @@ class GameCore(MainLoop):
         for row, tiles in enumerate(self.map.get_data):
             for column, tile in enumerate(tiles):
                 if tile == "1":
-                    self.visible_sprites.add(Tile(Vector2(column, row), self.image_manager.get_image("grass")), layer=0)
+                    t = Tile(Vector2(column, row), self.image_manager.get_image("grass"))
+                    self.nature_tiles.add(t)
+                    self.visible_sprites.add(t, layer=0)
                 if tile == "0":
-                    self.visible_sprites.add(Tile(Vector2(column, row), self.image_manager.get_image("water")), layer=0)
+                    t = Tile(Vector2(column, row), self.image_manager.get_image("water"))
+                    self.nature_tiles.add(t)
+                    self.visible_sprites.add(t, layer=0)
                 if tile == "9":
                     # TODO: Remove double sprite on one coordinate
-                    self.visible_sprites.add(Tile(Vector2(column, row), self.image_manager.get_image("grass")), layer=0)
-                    self.visible_sprites.add(Tile(Vector2(column, row), self.image_manager.get_image("village")), layer=1)
+                    t = Tile(Vector2(column, row), self.image_manager.get_image("grass"))
+                    self.nature_tiles.add(t)
+                    self.visible_sprites.add(t, layer=0)
+
+                    t = Tile(Vector2(column, row), self.image_manager.get_image("village"))
+                    self.player1_villages.add(t)
+                    self.visible_sprites.add(t, layer=1)
 
     def handle_mouse_event(self, type_, pos):
         pos = self.camera.apply(pos)
@@ -60,10 +76,12 @@ class GameCore(MainLoop):
 
     def handle_mouse_down(self, mouse_pos):
         clicked_sprite = None
-        for sprite in self.visible_sprites:
-            if sprite.check_click(mouse_pos) is True:
-                clicked_sprite = sprite
-                break
+
+        for group in self.search_order:
+            for sprite in group:
+                if sprite.check_click(mouse_pos) is True:
+                    clicked_sprite = sprite
+                    break
 
         if clicked_sprite is not None:
             if isinstance(clicked_sprite, Tile):
