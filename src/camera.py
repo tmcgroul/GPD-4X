@@ -4,13 +4,6 @@ from src.constants import *
 
 class Camera:
 
-    movement_keys = [
-        CAMERA_SHORTCUTS["Move up"],
-        CAMERA_SHORTCUTS["Move down"],
-        CAMERA_SHORTCUTS["Move left"],
-        CAMERA_SHORTCUTS["Move right"],
-    ]
-
     def __init__(self, width, height, activate_borders):
         self.velocity = Vector2(0, 0)
         self.position = Vector2(0, 0)
@@ -31,22 +24,45 @@ class Camera:
             return entity.rect.move(self.camera.topleft)
 
     def handle_key_down(self, key):
-        if key in self.movement_keys:
-            self._move_camera(key)
-            self.pressed_keys.append(key)
+        self.pressed_keys.append(key)
+
+        if key == CAMERA_SHORTCUTS["Move up"]:
+            self.velocity.y = CAMERA_SPEED
+        if key == CAMERA_SHORTCUTS["Move down"]:
+            self.velocity.y = -CAMERA_SPEED
+
+        if key == CAMERA_SHORTCUTS["Move left"]:
+            self.velocity.x = CAMERA_SPEED
+        if key == CAMERA_SHORTCUTS["Move right"]:
+            self.velocity.x = -CAMERA_SPEED
 
         if key == CAMERA_SHORTCUTS["Activate/deactivate borders"]:
             self.activate_borders = not self.activate_borders
 
     def handle_key_up(self, key):
-        if key in self.movement_keys:
-            self.pressed_keys.remove(key)
+        self.pressed_keys.remove(key)
 
-        if self.pressed_keys:
-            previous_key = self.pressed_keys[-1]
-            self._move_camera(previous_key)
-        else:
-            self._stop_camera()
+        if key == CAMERA_SHORTCUTS["Move up"]:
+            if CAMERA_SHORTCUTS["Move down"] in self.pressed_keys:
+                self.velocity.y = -CAMERA_SPEED
+            else:
+                self.velocity.y = 0
+        if key == CAMERA_SHORTCUTS["Move down"]:
+            if CAMERA_SHORTCUTS["Move up"] in self.pressed_keys:
+                self.velocity.y = CAMERA_SPEED
+            else:
+                self.velocity.y = 0
+
+        if key == CAMERA_SHORTCUTS["Move left"]:
+            if CAMERA_SHORTCUTS["Move right"] in self.pressed_keys:
+                self.velocity.x = -CAMERA_SPEED
+            else:
+                self.velocity.x = 0
+        if key == CAMERA_SHORTCUTS["Move right"]:
+            if CAMERA_SHORTCUTS["Move left"] in self.pressed_keys:
+                self.velocity.x = CAMERA_SPEED
+            else:
+                self.velocity.x = 0
 
     def _scrolling_limit(self):
         """Limit scrolling to map size"""
@@ -62,20 +78,3 @@ class Camera:
             self._scrolling_limit()
 
         self.camera = pg.Rect(self.position.x, self.position.y, self.width, self.height)
-
-    def _move_camera(self, key):
-        """Move camera depends on passed key."""
-        if key == CAMERA_SHORTCUTS["Move up"]:
-            self.velocity.y = CAMERA_SPEED
-        if key == CAMERA_SHORTCUTS["Move down"]:
-            self.velocity.y = -CAMERA_SPEED
-
-        if key == CAMERA_SHORTCUTS["Move left"]:
-            self.velocity.x = CAMERA_SPEED
-        if key == CAMERA_SHORTCUTS["Move right"]:
-            self.velocity.x = -CAMERA_SPEED
-
-    def _stop_camera(self):
-        """Prevent camera moving."""
-        self.velocity.x = 0
-        self.velocity.y = 0
