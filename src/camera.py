@@ -5,16 +5,19 @@ from src.constants import *
 class Camera:
     def __init__(self, width, height, activate_borders):
         self.velocity = Vector2(0, 0)
-        self.pos = Vector2(0, 0)
+        self.position = Vector2(0, 0)
         self.width = width
         self.height = height
         self.activate_borders = activate_borders
 
-        self.camera = pg.Rect(self.pos.x, self.pos.y, self.width, self.height)
+        self.camera = pg.Rect(self.position.x, self.position.y, self.width, self.height)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.position=})"
 
     def apply(self, entity):
         if isinstance(entity, Vector2):
-            return entity - self.pos
+            return entity - self.position
         else:
             return entity.rect.move(self.camera.topleft)
 
@@ -45,15 +48,15 @@ class Camera:
 
     def _scrolling_limit(self):
         """Limit scrolling to map size"""
-        self.pos.x = min(0.0, self.pos.x)  # left
-        self.pos.y = min(0.0, self.pos.y)  # top
-        self.pos.x = max(-(self.width - SCREEN_WIDTH), self.pos.x)  # right
-        self.pos.y = max(-(self.height - SCREEN_HEIGHT), self.pos.y)  # bottom
+        self.position.x = min(0.0, self.position.x)  # left
+        self.position.y = min(0.0, self.position.y)  # top
+        self.position.x = max(-(self.width - SCREEN_WIDTH), self.position.x)  # right
+        self.position.y = max(-(self.height - SCREEN_HEIGHT), self.position.y)  # bottom
 
     def update(self):
-        self.pos += self.velocity
+        self.position += self.velocity
 
         if self.activate_borders is True:
             self._scrolling_limit()
 
-        self.camera = pg.Rect(self.pos.x, self.pos.y, self.width, self.height)
+        self.camera = pg.Rect(self.position.x, self.position.y, self.width, self.height)

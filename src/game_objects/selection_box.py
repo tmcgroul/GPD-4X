@@ -14,6 +14,9 @@ class SelectionBox(pg.sprite.Sprite):
         pg.draw.lines(self.image, self.color, True, pts, d)
         self.rect = self.image.get_rect(center=self._target.rect.center)
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.target=})"
+
     @property
     def target(self):
         return self._target

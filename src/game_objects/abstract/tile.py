@@ -10,6 +10,9 @@ class Tile(pg.sprite.Sprite):
         self.image = image
         self.rect = self.image.get_rect(topleft=self.position)
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.position=}, {self.coordinate=}, {self.image.get_size()=})"
+
     def get_coordinate(self):
         return self.coordinate
 

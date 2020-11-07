@@ -17,7 +17,7 @@ class GameCore(MainLoop):
         super().__init__(CAPTION, SCREEN_SIZE, FPS)
 
         self.image_manager = SpriteSheet()
-        self.selection_box = pg.sprite.GroupSingle()
+        self.selection_box = pg.sprite.GroupSingle(None)
 
         self.nature_tiles = pg.sprite.Group()
         self.player1_villages = pg.sprite.Group()
@@ -105,8 +105,13 @@ class GameCore(MainLoop):
                 self.selection_box.sprite.target.move_to(clicked_sprite)
 
     def handle_mouse_down(self, mouse_pos, mouse_button):
-        clicked_sprite = None
+        def get_mouse_click_func(button, sprite_):
+            return {
+                1: self.left_click,
+                3: self.right_click,
+            }.get(button, lambda: None)(sprite_)
 
+        clicked_sprite = None
         for group in self.search_order:
             for sprite in group:
                 if sprite.check_click(mouse_pos) is True:
@@ -114,10 +119,7 @@ class GameCore(MainLoop):
                     break
 
         if clicked_sprite is not None:
-            if mouse_button == 1:
-                self.left_click(clicked_sprite)
-            if mouse_button == 3:
-                self.right_click(clicked_sprite)
+            get_mouse_click_func(mouse_button, clicked_sprite)
 
     def draw(self):
         for sprite in self.visible_sprites:

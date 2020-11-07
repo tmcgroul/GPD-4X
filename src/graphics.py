@@ -11,8 +11,12 @@ class SpriteSheet:
         self.source_image.set_colorkey("white")
         self.width, self.height = self.source_image.get_size()
 
-        self.sprites = {row: [(col * SH_TILE_SIZE, row * SH_TILE_SIZE, SH_TILE_SIZE, SH_TILE_SIZE) for col in
-                              range(self.width // SH_TILE_SIZE)] for row in range(self.height // SH_TILE_SIZE)}
+        TL = SH_TILE_SIZE
+        self.sprites = {row: [(col * TL, row * TL, TL, TL) for col in range(self.width // TL)]
+                        for row in range(self.height // TL)}
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}('{path.TILE_SHEET}', {len(self.sprites)=})"
 
     def get_image(self, name):
         x, y, width, height = self._name_to_coordinate(name)
