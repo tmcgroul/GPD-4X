@@ -2,6 +2,7 @@ from pygame.math import Vector2
 
 from src.camera import Camera
 from src.game_objects.abstract.tile import Tile
+from src.game_objects.selection_box import SelectionBox
 from src.graphics import SpriteSheet
 from src.main_loop import MainLoop
 from src.map import Map
@@ -14,7 +15,7 @@ class GameCore(MainLoop):
         super().__init__(CAPTION, SCREEN_SIZE, FPS)
 
         self.image_manager = SpriteSheet()
-        self.selected_tile = pg.sprite.GroupSingle()
+        self.selection_box = pg.sprite.GroupSingle()
 
         self.nature_tiles = pg.sprite.Group()
         self.player1_villages = pg.sprite.Group()
@@ -86,15 +87,15 @@ class GameCore(MainLoop):
         if clicked_sprite is not None:
             if isinstance(clicked_sprite, Tile):
 
-                # if selected_tile group is empty
-                if self.selected_tile.sprite is None:
-                    clicked_sprite.switch_selection()
-                    self.selected_tile.add(clicked_sprite)
+                # select
+                if self.selection_box.sprite is None:
+                    sb = SelectionBox(clicked_sprite)
+                    self.selection_box.add(sb)
+                    self.visible_sprites.add(sb)
 
                 # unselect
-                elif self.selected_tile.sprite is clicked_sprite:
-                    clicked_sprite.switch_selection()
-                    self.selected_tile.empty()
+                elif self.selection_box.sprite.target is clicked_sprite:
+                    self.selection_box.sprite.kill()
 
     def draw(self):
         for sprite in self.visible_sprites:
@@ -107,9 +108,6 @@ class GameCore(MainLoop):
         self.main_surface.fill(BG_COLOR)
         super().update()
         self.camera.update()
-
-        for sprite in self.visible_sprites:
-            if sprite.selected is True: pass
 
 
 if __name__ == '__main__':
