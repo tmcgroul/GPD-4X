@@ -2,7 +2,9 @@ from pygame.math import Vector2
 
 from src.camera import Camera
 from src.game_objects.abstract.tile import Tile
+from src.game_objects.movable_tile import MovableTile
 from src.game_objects.selection_box import SelectionBox
+from src.game_objects.static_tile import StaticTile
 from src.graphics import SpriteSheet
 from src.main_loop import MainLoop
 from src.map import Map
@@ -19,9 +21,12 @@ class GameCore(MainLoop):
 
         self.nature_tiles = pg.sprite.Group()
         self.player1_villages = pg.sprite.Group()
+        self.player1_units = pg.sprite.Group()
+
         self.search_order = [
-            self.player1_villages,
             self.nature_tiles,
+            self.player1_villages,
+            self.player1_units,
         ]
 
         self.create_objects()
@@ -48,16 +53,24 @@ class GameCore(MainLoop):
         for row, tiles in enumerate(self.map.get_data):
             for column, tile in enumerate(tiles):
                 if tile == "1":
-                    t = Tile(Vector2(column, row), self.image_manager.get_image("grass"))
+                    t = StaticTile(Vector2(column, row), self.image_manager.get_image("grass"))
                     self.nature_tiles.add(t)
                     self.visible_sprites.add(t, layer=0)
                 if tile == "0":
-                    t = Tile(Vector2(column, row), self.image_manager.get_image("water"))
+                    t = StaticTile(Vector2(column, row), self.image_manager.get_image("water"))
                     self.nature_tiles.add(t)
                     self.visible_sprites.add(t, layer=0)
+                if tile == "8":
+                    t = StaticTile(Vector2(column, row), self.image_manager.get_image("grass"))
+                    self.nature_tiles.add(t)
+                    self.visible_sprites.add(t, layer=0)
+
+                    t = MovableTile(Vector2(column, row), self.image_manager.get_image("farmer"))
+                    self.player1_units.add(t)
+                    self.visible_sprites.add(t, layer=2)
                 if tile == "9":
                     # TODO: Remove double sprite on one coordinate
-                    t = Tile(Vector2(column, row), self.image_manager.get_image("grass"))
+                    t = StaticTile(Vector2(column, row), self.image_manager.get_image("grass"))
                     self.nature_tiles.add(t)
                     self.visible_sprites.add(t, layer=0)
 
@@ -75,28 +88,36 @@ class GameCore(MainLoop):
         elif type_ == pg.MOUSEBUTTONUP:
             pass
 
+    def left_click(self, clicked_sprite):
+        # select
+        if self.selection_box.sprite is None:
+            sb = SelectionBox(clicked_sprite)
+            self.selection_box.add(sb)
+            self.visible_sprites.add(sb)
+
+        # unselect
+        elif self.selection_box.sprite.target is clicked_sprite:
+            self.selection_box.sprite.kill()
+
+    def right_click(self, clicked_sprite):
+        if self.selection_box.sprite is not None:
+            if isinstance(self.selection_box.sprite.target, MovableTile):
+                self.selection_box.sprite.target.move_to(clicked_sprite)
+
     def handle_mouse_down(self, mouse_pos, mouse_button):
-        if mouse_button == 1:
-            clicked_sprite = None
+        clicked_sprite = None
 
-            for group in self.search_order:
-                for sprite in group:
-                    if sprite.check_click(mouse_pos) is True:
-                        clicked_sprite = sprite
-                        break
+        for group in self.search_order:
+            for sprite in group:
+                if sprite.check_click(mouse_pos) is True:
+                    clicked_sprite = sprite
+                    break
 
-            if clicked_sprite is not None:
-                if isinstance(clicked_sprite, Tile):
-
-                    # select
-                    if self.selection_box.sprite is None:
-                        sb = SelectionBox(clicked_sprite)
-                        self.selection_box.add(sb)
-                        self.visible_sprites.add(sb)
-
-                    # unselect
-                    elif self.selection_box.sprite.target is clicked_sprite:
-                        self.selection_box.sprite.kill()
+        if clicked_sprite is not None:
+            if mouse_button == 1:
+                self.left_click(clicked_sprite)
+            if mouse_button == 3:
+                self.right_click(clicked_sprite)
 
     def draw(self):
         for sprite in self.visible_sprites:

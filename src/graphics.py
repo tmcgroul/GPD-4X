@@ -35,6 +35,7 @@ class SpriteSheet:
         images = {
             "grass": [(0, i) for i in range(4)],
             "water": [(24, i) for i in range(4)],
+            "farmer": [(13, 6), (14, 5)],
             "village": [*[(1, i) for i in range(3)], *[(2, i) for i in range(4)], (3, 0)],
         }
 
