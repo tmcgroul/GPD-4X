@@ -115,11 +115,12 @@ class GameCore(MainLoop):
                 self.selection_box.sprite.target.move_to(clicked_sprite)
 
     def handle_mouse_down(self, mouse_pos, mouse_button):
-        def get_mouse_click_func(button, sprite_):
+        def mouse_button_function():
+            """Call the appropriate click function with the clicked_sprite parameter depending on the button"""
             return {
                 1: self.left_click,
                 3: self.right_click,
-            }.get(button, lambda: None)(sprite_)
+            }.get(mouse_button, lambda _: None)(clicked_sprite)
 
         clicked_sprite = None
         for group in self.search_order:
@@ -129,7 +130,7 @@ class GameCore(MainLoop):
                     break
 
         if clicked_sprite is not None:
-            get_mouse_click_func(mouse_button, clicked_sprite)
+            mouse_button_function()
 
     def draw(self):
         for sprite in self.visible_sprites:
