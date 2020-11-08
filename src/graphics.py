@@ -1,13 +1,15 @@
 from random import choice
+
 import pygame as pg
-from src.constants import *
-from src import path
+
+from src.settings import paths
+from src.settings.constants import TILE_SIZE, SH_TILE_SIZE
 
 
 class SpriteSheet:
     """Image manager. Load sprite images from a sprite sheets"""
     def __init__(self):
-        self.source_image = pg.image.load(path.TILE_SHEET).convert_alpha()
+        self.source_image = pg.image.load(paths.TILE_SHEET).convert_alpha()
         self.source_image.set_colorkey("white")
         self.width, self.height = self.source_image.get_size()
 
@@ -16,7 +18,7 @@ class SpriteSheet:
                         for row in range(self.height // TL)}
 
     def __repr__(self):
-        return f"{self.__class__.__name__}('{path.TILE_SHEET}', {len(self.sprites)=})"
+        return f"{self.__class__.__name__}('{paths.TILE_SHEET}', {len(self.sprites)=})"
 
     def get_image(self, name):
         x, y, width, height = self._name_to_coordinate(name)
@@ -29,7 +31,8 @@ class SpriteSheet:
 
         return sprite
 
-    def _scale(self, sprite):
+    @staticmethod
+    def _scale(sprite):
         return pg.transform.scale(sprite, (TILE_SIZE, TILE_SIZE))
 
     def _name_to_coordinate(self, name):

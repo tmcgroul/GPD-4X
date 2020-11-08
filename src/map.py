@@ -1,4 +1,4 @@
-from src.constants import *
+from src.settings.constants import TILE_SIZE
 
 
 class Map:

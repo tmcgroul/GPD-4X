@@ -1,7 +1,7 @@
+from collections import defaultdict
 from os import environ
 
 import pygame as pg
-from collections import defaultdict
 
 
 class MainLoop:

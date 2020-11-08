@@ -1,4 +1,6 @@
-from src.constants import *
+import pygame as pg
+
+from src.settings.constants import SELECTION_BOX_COLOR, SELECTION_BOX_WIDTH
 
 
 class SelectionBox(pg.sprite.Sprite):

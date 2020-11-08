@@ -1,4 +1,3 @@
-from src.constants import *
 from src.game_objects.abstract.tile import Tile
 
 

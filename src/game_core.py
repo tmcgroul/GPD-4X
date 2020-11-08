@@ -1,3 +1,4 @@
+import pygame as pg
 from pygame.math import Vector2
 
 from src.camera import Camera
@@ -8,8 +9,17 @@ from src.game_objects.static_tile import StaticTile
 from src.graphics import SpriteSheet
 from src.main_loop import MainLoop
 from src.map import Map
-from src.constants import *
-from src.path import *
+from src.settings.constants import (
+    CAPTION,
+    SCREEN_SIZE,
+    FPS,
+    TILE_SIZE,
+    ACTIVATE_SCROLLING_BORDERS,
+    ACTIVATE_TEST_GRID,
+    BG_COLOR,
+)
+from src.settings.controllers import CONTROLLERS_CAMERA
+from src.settings.paths import *
 
 
 class GameCore(MainLoop):
@@ -38,7 +48,7 @@ class GameCore(MainLoop):
 
     def _create_camera(self):
         self.camera = Camera(self.map.width, self.map.height, ACTIVATE_SCROLLING_BORDERS)
-        for key in CAMERA_SHORTCUTS.values():
+        for key in CONTROLLERS_CAMERA.values():
             self.add_up_down_key_handlers(self.camera, key)
 
     def _draw_grid(self):

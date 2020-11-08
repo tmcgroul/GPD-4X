@@ -1,5 +1,5 @@
 import sys
-from src.path import REQUIREMENTS
+from src.settings.paths import REQUIREMENTS
 
 
 if sys.version_info < (3, 8):

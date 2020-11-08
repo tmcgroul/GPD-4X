@@ -1,5 +1,8 @@
+import pygame as pg
 from pygame.math import Vector2
-from src.constants import *
+
+from src.settings.constants import CAMERA_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT
+from src.settings.controllers import CONTROLLERS_CAMERA
 
 
 class Camera:
@@ -26,40 +29,40 @@ class Camera:
     def handle_key_down(self, key):
         self.pressed_keys.append(key)
 
-        if key == CAMERA_SHORTCUTS["Move up"]:
+        if key == CONTROLLERS_CAMERA["Move up"]:
             self.velocity.y = CAMERA_SPEED
-        if key == CAMERA_SHORTCUTS["Move down"]:
+        if key == CONTROLLERS_CAMERA["Move down"]:
             self.velocity.y = -CAMERA_SPEED
 
-        if key == CAMERA_SHORTCUTS["Move left"]:
+        if key == CONTROLLERS_CAMERA["Move left"]:
             self.velocity.x = CAMERA_SPEED
-        if key == CAMERA_SHORTCUTS["Move right"]:
+        if key == CONTROLLERS_CAMERA["Move right"]:
             self.velocity.x = -CAMERA_SPEED
 
-        if key == CAMERA_SHORTCUTS["Activate/deactivate borders"]:
+        if key == CONTROLLERS_CAMERA["Activate/deactivate borders"]:
             self.activate_borders = not self.activate_borders
 
     def handle_key_up(self, key):
         self.pressed_keys.remove(key)
 
-        if key == CAMERA_SHORTCUTS["Move up"]:
-            if CAMERA_SHORTCUTS["Move down"] in self.pressed_keys:
+        if key == CONTROLLERS_CAMERA["Move up"]:
+            if CONTROLLERS_CAMERA["Move down"] in self.pressed_keys:
                 self.velocity.y = -CAMERA_SPEED
             else:
                 self.velocity.y = 0
-        if key == CAMERA_SHORTCUTS["Move down"]:
-            if CAMERA_SHORTCUTS["Move up"] in self.pressed_keys:
+        if key == CONTROLLERS_CAMERA["Move down"]:
+            if CONTROLLERS_CAMERA["Move up"] in self.pressed_keys:
                 self.velocity.y = CAMERA_SPEED
             else:
                 self.velocity.y = 0
 
-        if key == CAMERA_SHORTCUTS["Move left"]:
-            if CAMERA_SHORTCUTS["Move right"] in self.pressed_keys:
+        if key == CONTROLLERS_CAMERA["Move left"]:
+            if CONTROLLERS_CAMERA["Move right"] in self.pressed_keys:
                 self.velocity.x = -CAMERA_SPEED
             else:
                 self.velocity.x = 0
-        if key == CAMERA_SHORTCUTS["Move right"]:
-            if CAMERA_SHORTCUTS["Move left"] in self.pressed_keys:
+        if key == CONTROLLERS_CAMERA["Move right"]:
+            if CONTROLLERS_CAMERA["Move left"] in self.pressed_keys:
                 self.velocity.x = CAMERA_SPEED
             else:
                 self.velocity.x = 0

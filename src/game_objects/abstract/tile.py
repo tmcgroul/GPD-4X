@@ -1,4 +1,6 @@
-from src.constants import *
+import pygame as pg
+
+from src.settings.constants import TILE_SIZE
 
 
 class Tile(pg.sprite.Sprite):
